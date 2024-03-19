@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Minha extensão</title>
+		<script src="https://cdn.jsdelivr.net/npm/@tarkenag/tex-extension-helper@2/lib/tex-helper.js"></script>
+	</head>
+	<body>
+		<div>
+			<h1 id="waiting_auth">Esperando autenticação...</h1>
+			<h1 id="waiting_context">Esperando contexto...</h1>
+
+			<h3>Detalhes da criacao</h3>
+			<pre id="context_details_response"></pre>
+		</div>
+		<script type="module">
+			const waitingAuth$ = document.getElementById("waiting_auth");
+			const waitingContext$ = document.getElementById("waiting_context");
+			const contextResponse$ = document.getElementById("context_details_response");
+
+			let userImpersonationAccessToken = undefined;
+
+			// Registrar callback para o evento 'on_authorized'
+			window.Tarken.tex.onAuthorized(function onAuthorizedEventHandler(onAuthorizedData) {
+				waitingAuth$.remove();
+
+				userImpersonationAccessToken = onAuthorizedData.token;
+			});
+
+			// Registrar callback para o evento 'on_context'
+			window.Tarken.tex.onContext(function onContextEventHandler(contextData) {
+				waitingContext$.remove();
+
+				console.log(contextData);
+				displayContextData(contextData);
+			});
+
+			window.Tarken.tex.listen();
+
+			function populateFormData(contextData, formDiv) {
+				for (const [key, value] of Object.entries(contextData.state)) {
+					const identifier = key.split("_")?.[1];
+					const div = document.createElement("div");
+					div.className = "formEl";
+
+					div.innerHTML = `<span>${key}:</span> ${value}`;
+					formDiv.appendChild(div);
+				}
+			}
+
+			function populateCreditItemsData(contextData, creditItemsDiv) {
+				const creditRequestItems = contextData.creditRequestItems.reduce((acc, curr) => {
+					if (curr?.classifications?.length === 0) return acc;
+					curr.classifications.forEach((classification) => {
+						if (!acc[classification.creditCategoryOptionId]) acc[classification.creditCategoryOptionId] = 0;
+						acc[classification.creditCategoryOptionId] += curr.financialValue;
+					});
+					return acc;
+				}, {});
+
+				if (Object.keys(creditRequestItems).length === 0) {
+					const emptyTextC = document.createElement("h4");
+					emptyTextC.innerHTML = "No credit Items data available";
+					formDataDiv.appendChild(emptyTextC);
+					return;
+				}
+
+				for (const [key, value] of Object.entries(creditRequestItems)) {
+					const div = document.createElement("div");
+					div.className = "creditItem";
+					div.innerHTML = `<span>${key}:</span> ${value}R$`;
+					creditItemsDiv.appendChild(div);
+				}
+			}
+
+			function displayContextData(contextData) {
+				const workflowIdDiv = document.createElement("div");
+				workflowIdDiv.innerHTML = contextData.workflowId;
+				contextResponse$.appendChild(workflowIdDiv);
+
+				const creditItemsDiv = document.createElement("div");
+				creditItemsDiv.className = "creditItemsContainer";
+				const creditItemsTitle = document.createElement("h3");
+				creditItemsTitle.innerHTML = "Credit Items Data";
+				creditItemsDiv.appendChild(creditItemsTitle);
+				if (contextData.creditRequestItems) {
+					populateCreditItemsData(contextData, creditItemsDiv);
+				} else {
+					const emptyTextC = document.createElement("h4");
+					emptyTextC.innerHTML = "No credit Items data available";
+					formDataDiv.appendChild(emptyTextC);
+				}
+
+				contextResponse$.appendChild(creditItemsDiv);
+
+				const formDataDiv = document.createElement("div");
+				formDataDiv.className = "formContainer";
+				const formTitle = document.createElement("h3");
+				formTitle.innerHTML = "Form Data";
+				formDataDiv.appendChild(formTitle);
+				if (contextData.state) {
+					populateFormData(contextData, formDataDiv);
+				} else {
+					const emptyText = document.createElement("h4");
+					emptyText.innerHTML = "No form data available";
+					formDataDiv.appendChild(emptyText);
+				}
+
+				contextResponse$.appendChild(formDataDiv);
+			}
+		</script>
+	</body>
+</html>
