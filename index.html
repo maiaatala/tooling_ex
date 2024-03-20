@@ -75,7 +75,7 @@
 
 			function displayContextData(contextData) {
 				const workflowIdDiv = document.createElement("div");
-				workflowIdDiv.innerHTML = contextData.workflowId;
+				workflowIdDiv.innerHTML = `<span>workflow ID:</span> contextData.workflowId`;
 				contextResponse$.appendChild(workflowIdDiv);
 
 				const creditItemsDiv = document.createElement("div");
