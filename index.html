@@ -25,8 +25,6 @@
 			// Registrar callback para o evento 'on_authorized'
 			window.Tarken.tex.onAuthorized(function onAuthorizedEventHandler(onAuthorizedData) {
 				waitingAuth$.remove();
-
-				userImpersonationAccessToken = onAuthorizedData?.token;
 			});
 
 			// Registrar callback para o evento 'on_context'
@@ -63,7 +61,7 @@
 				if (Object.keys(creditRequestItems).length === 0) {
 					const emptyTextC = document.createElement("h4");
 					emptyTextC.innerHTML = "No credit Items data available";
-					formDataDiv.appendChild(emptyTextC);
+					creditItemsDiv.appendChild(emptyTextC);
 					return;
 				}
 
@@ -90,7 +88,7 @@
 				} else {
 					const emptyTextC = document.createElement("h4");
 					emptyTextC.innerHTML = "No credit Items data available";
-					formDataDiv.appendChild(emptyTextC);
+					creditItemsDiv.appendChild(emptyTextC);
 				}
 
 				contextResponse$.appendChild(creditItemsDiv);
@@ -100,7 +98,7 @@
 				const formTitle = document.createElement("h3");
 				formTitle.innerHTML = "Form Data";
 				formDataDiv.appendChild(formTitle);
-				if (contextData.state) {
+				if (contextData.state && Object.keys(contextData.state).length > 0) {
 					populateFormData(contextData, formDataDiv);
 				} else {
 					const emptyText = document.createElement("h4");
