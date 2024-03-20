@@ -83,7 +83,7 @@
 				const creditItemsTitle = document.createElement("h3");
 				creditItemsTitle.innerHTML = "Credit Items Data";
 				creditItemsDiv.appendChild(creditItemsTitle);
-				if (contextData.creditRequestItems) {
+				if (contextData.form.creditRequestItems) {
 					populateCreditItemsData(contextData, creditItemsDiv);
 				} else {
 					const emptyTextC = document.createElement("h4");
@@ -98,7 +98,7 @@
 				const formTitle = document.createElement("h3");
 				formTitle.innerHTML = "Form Data";
 				formDataDiv.appendChild(formTitle);
-				if (contextData.state && Object.keys(contextData.state).length > 0) {
+				if (contextData.state && Object.keys(contextData.form.state).length > 0) {
 					populateFormData(contextData, formDataDiv);
 				} else {
 					const emptyText = document.createElement("h4");
