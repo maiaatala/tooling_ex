@@ -37,8 +37,8 @@
 
 			window.Tarken.tex.listen();
 
-			function populateFormData(contextData, formDiv) {
-				for (const [key, value] of Object.entries(contextData.state)) {
+			function populateFormData(formState, formDiv) {
+				for (const [key, value] of Object.entries(formState)) {
 					const identifier = key.split("_")?.[1];
 					const div = document.createElement("div");
 					div.className = "formEl";
@@ -48,8 +48,8 @@
 				}
 			}
 
-			function populateCreditItemsData(contextData, creditItemsDiv) {
-				const creditRequestItems = contextData.creditRequestItems.reduce((acc, curr) => {
+			function populateCreditItemsData(crItems, creditItemsDiv) {
+				const creditRequestItems = crItems.reduce((acc, curr) => {
 					if (curr?.classifications?.length === 0) return acc;
 					curr.classifications.forEach((classification) => {
 						if (!acc[classification.creditCategoryOptionId]) acc[classification.creditCategoryOptionId] = 0;
@@ -83,8 +83,8 @@
 				const creditItemsTitle = document.createElement("h3");
 				creditItemsTitle.innerHTML = "Credit Items Data";
 				creditItemsDiv.appendChild(creditItemsTitle);
-				if (contextData.form.creditRequestItems) {
-					populateCreditItemsData(contextData, creditItemsDiv);
+				if (contextData.form.creditRequestItems.length > 0) {
+					populateCreditItemsData(contextData.form.creditRequestItems, creditItemsDiv);
 				} else {
 					const emptyTextC = document.createElement("h4");
 					emptyTextC.innerHTML = "No credit Items data available";
@@ -98,8 +98,8 @@
 				const formTitle = document.createElement("h3");
 				formTitle.innerHTML = "Form Data";
 				formDataDiv.appendChild(formTitle);
-				if (contextData.state && Object.keys(contextData.form.state).length > 0) {
-					populateFormData(contextData, formDataDiv);
+				if (Object.keys(contextData.form.state).length > 0) {
+					populateFormData(contextData.form.state, formDataDiv);
 				} else {
 					const emptyText = document.createElement("h4");
 					emptyText.innerHTML = "No form data available";
