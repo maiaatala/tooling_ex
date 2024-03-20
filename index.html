@@ -26,7 +26,7 @@
 			window.Tarken.tex.onAuthorized(function onAuthorizedEventHandler(onAuthorizedData) {
 				waitingAuth$.remove();
 
-				userImpersonationAccessToken = onAuthorizedData.token;
+				userImpersonationAccessToken = onAuthorizedData?.token;
 			});
 
 			// Registrar callback para o evento 'on_context'
