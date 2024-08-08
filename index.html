@@ -43,7 +43,7 @@
 					const div = document.createElement("div");
 					div.className = "formEl";
 
-					div.innerHTML = `<span>${key}:</span> ${value}`;
+					div.innerHTML = `<span>${identifier}:</span> ${value}`;
 					formDiv.appendChild(div);
 				}
 			}
@@ -74,39 +74,40 @@
 			}
 
 			function displayContextData(contextData) {
+				contextResponse$.innerHTML = "";
 				const workflowIdDiv = document.createElement("div");
-				workflowIdDiv.innerHTML = `<span>workflow ID:</span> ${contextData.workflowId}`;
+				workflowIdDiv.innerHTML = `${JSON.stringify(contextData, null, "\t")}`;
 				contextResponse$.appendChild(workflowIdDiv);
 
-				const creditItemsDiv = document.createElement("div");
-				creditItemsDiv.className = "creditItemsContainer";
-				const creditItemsTitle = document.createElement("h3");
-				creditItemsTitle.innerHTML = "Credit Items Data";
-				creditItemsDiv.appendChild(creditItemsTitle);
-				if (contextData.form.creditRequestItems.length > 0) {
-					populateCreditItemsData(contextData.form.creditRequestItems, creditItemsDiv);
-				} else {
-					const emptyTextC = document.createElement("h4");
-					emptyTextC.innerHTML = "No credit Items data available";
-					creditItemsDiv.appendChild(emptyTextC);
-				}
-
-				contextResponse$.appendChild(creditItemsDiv);
-
-				const formDataDiv = document.createElement("div");
-				formDataDiv.className = "formContainer";
-				const formTitle = document.createElement("h3");
-				formTitle.innerHTML = "Form Data";
-				formDataDiv.appendChild(formTitle);
-				if (Object.keys(contextData.form.state).length > 0) {
-					populateFormData(contextData.form.state, formDataDiv);
-				} else {
-					const emptyText = document.createElement("h4");
-					emptyText.innerHTML = "No form data available";
-					formDataDiv.appendChild(emptyText);
-				}
-
-				contextResponse$.appendChild(formDataDiv);
+				// const creditItemsDiv = document.createElement("div");
+				// creditItemsDiv.className = "creditItemsContainer";
+				// const creditItemsTitle = document.createElement("h3");
+				// creditItemsTitle.innerHTML = "Credit Items Data";
+				// creditItemsDiv.appendChild(creditItemsTitle);
+				// if (contextData.form.creditRequestItems.length > 0) {
+				// 	populateCreditItemsData(contextData.form.creditRequestItems, creditItemsDiv);
+				// } else {
+				// 	const emptyTextC = document.createElement("h4");
+				// 	emptyTextC.innerHTML = "No credit Items data available";
+				// 	creditItemsDiv.appendChild(emptyTextC);
+				// }
+				//
+				// contextResponse$.appendChild(creditItemsDiv);
+				//
+				// const formDataDiv = document.createElement("div");
+				// formDataDiv.className = "formContainer";
+				// const formTitle = document.createElement("h3");
+				// formTitle.innerHTML = "Form Data";
+				// formDataDiv.appendChild(formTitle);
+				// if (Object.keys(contextData.form.state).length > 0) {
+				// 	populateFormData(contextData.form.state, formDataDiv);
+				// } else {
+				// 	const emptyText = document.createElement("h4");
+				// 	emptyText.innerHTML = "No form data available";
+				// 	formDataDiv.appendChild(emptyText);
+				// }
+				//
+				// contextResponse$.appendChild(formDataDiv);
 			}
 		</script>
 	</body>
